@@ -1,12 +1,8 @@
-import com.thoughtworks.selenium.webdriven.commands.Click;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 public class FInanceUA {
     @Test
     public void testName() throws Exception{
-        String expectedResult = "927";
         WebDriver driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("http://finance.i.ua/");
@@ -38,26 +33,12 @@ public class FInanceUA {
         sum.sendKeys(sumToBuy+"");
         new Select(bank).selectByVisibleText("НБУ");
 
-        /*WebElement wait = (new WebDriverWait(driver,10))
-                .until(not(ExpectedConditions.textToBePresentInElementLocated(result, "0.00")));*/
-
-
         double rateNumber = Double.valueOf(rate.getAttribute("value"));
-        double resultNumber = Double.valueOf(result.getAttribute("value"));
-       /* Assert.assertEquals(rateNumber*sumToBuy-resultNumber>0.0001);*/
+        String resultString = result.getAttribute("value").replaceAll(",",".").replaceAll("[\\u00A0]", "");
+        double resultNumber = Double.valueOf(resultString);
+
         Assert.assertTrue(rateNumber*sumToBuy-resultNumber<0.0001);
 
-
-
-        /*new Select(carType).selectByVisibleText("Легковые 2001-3000 см³");
-
-        new Select(driver.findElement(By.id("pay"))).selectByVisibleText("200 000 грн");
-
-        WebElement result = driver.findElement(By.id("price-office-dis"));
-        WebElement resultl = (new WebDriverWait(driver,10)).until(ExpectedConditions.textToBePresentInElement(result,expectedResult));
-
-        String actualResult = driver.findElement(By.id("price-office-dis")).getText();
-        Assert.assertEquals(actualResult,expectedResult);*/
 
         driver.quit();
     }
